@@ -16,7 +16,6 @@ import org.opensaml.xmlsec.signature.Signature
 import org.opensaml.xmlsec.signature.X509Certificate
 import org.opensaml.xmlsec.signature.X509Data
 import org.opensaml.xmlsec.signature.support.SignatureConstants
-import org.opensaml.xmlsec.signature.support.SignatureValidator
 import org.opensaml.xmlsec.signature.support.Signer
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.BadCredentialsException
@@ -138,7 +137,6 @@ class SamlService(
         val response = createSuccessResponse(assertion, requestId, "http://localhost:8080")
         signResponse(response)
 
-        SignatureValidator.validate(response.signature!!, BasicX509Credential(loadCertificate()))
         return marshalToXml(response)
     }
 

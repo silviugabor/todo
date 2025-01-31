@@ -1,25 +1,25 @@
 package com.todo.service
 
+import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
-import io.jsonwebtoken.security.Keys
+import io.jsonwebtoken.Jwts.SIG.HS256
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
 class TokenService {
-    private val secretKey = Keys.secretKeyFor(SignatureAlgorithm.HS256)
+    private val secretKey = HS256.key().build()
 
     fun generateToken(email: String, authorities: Collection<GrantedAuthority>): String {
         val now = Date()
-        val validity = Date(now.time + 3600000) // 1 hour
+        val validity = Date(now.time + 3600000)
 
         return Jwts.builder()
-            .setSubject(email)
+            .subject(email)
             .claim("roles", authorities.map { it.authority })
-            .setIssuedAt(now)
-            .setExpiration(validity)
+            .issuedAt(now)
+            .expiration(validity)
             .signWith(secretKey)
             .compact()
     }
@@ -27,21 +27,25 @@ class TokenService {
     fun validateToken(token: String): Boolean {
         return try {
             Jwts.parser()
-                .setSigningKey(secretKey)
+                .verifyWith(secretKey)
                 .build()
-                .parseClaimsJws(token)
+                .parseSignedClaims(token)
             true
         } catch (e: Exception) {
             false
         }
     }
 
-    fun getEmailFromToken(token: String): String {
+    fun getClaimsFromToken(token: String): Claims {
         return Jwts.parser()
-            .setSigningKey(secretKey)
+            .verifyWith(secretKey)
             .build()
-            .parseClaimsJws(token)
-            .body
+            .parseSignedClaims(token)
+            .payload
+    }
+
+    fun getEmailFromToken(token: String): String {
+        return getClaimsFromToken(token)
             .subject
     }
 }

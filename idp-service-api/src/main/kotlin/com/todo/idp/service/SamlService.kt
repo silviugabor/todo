@@ -76,7 +76,6 @@ class SamlService(
         val idpDescriptor = createSAMLObject(IDPSSODescriptor.DEFAULT_ELEMENT_NAME) as IDPSSODescriptor
         (idpDescriptor as RoleDescriptor).addSupportedProtocol("urn:oasis:names:tc:SAML:2.0:protocol")
 
-        // Cast the list to a mutable list and add the SSO service
         val ssoService = createSAMLObject(SingleSignOnService.DEFAULT_ELEMENT_NAME) as SingleSignOnService
         ssoService.binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
         ssoService.location = "http://localhost:8081/saml/sso"

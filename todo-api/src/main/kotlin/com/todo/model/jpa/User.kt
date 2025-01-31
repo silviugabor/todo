@@ -4,15 +4,16 @@ import jakarta.persistence.*
 
 @Entity
 @Table(name = "users")
-class User(
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
-    val id: Long? = null,
+class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Long? = null
 
     @Column(unique = true)
-    val email: String,
+    lateinit var email: String
 
-    val name: String,
+    lateinit var name: String
 
     @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL])
-    val todos: MutableList<Todo> = mutableListOf()
-)
+    var todos: MutableList<Todo> = mutableListOf()
+}

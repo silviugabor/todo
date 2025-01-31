@@ -26,11 +26,10 @@ class TodoService(
     fun createTodo(request: TodoRequest, username: String?): Todo {
         val user = getUser(username)
 
-        val todo = Todo(
-            title = request.title,
-            description = request.description,
-            user = user
-        )
+        val todo = Todo()
+        todo.title = request.title
+        todo.description = request.description
+        todo.user = user
 
         return todoRepository.save(todo)
     }

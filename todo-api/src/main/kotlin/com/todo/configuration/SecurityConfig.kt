@@ -1,50 +1,60 @@
 package com.todo.configuration
 
 import com.todo.controller.SamlSuccessHandler
+import com.todo.service.TokenService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.context.annotation.Profile
-import org.springframework.core.annotation.Order
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
+import org.springframework.security.config.http.SessionCreationPolicy
+import org.springframework.security.saml2.core.Saml2ResponseValidatorResult
+import org.springframework.security.saml2.provider.service.authentication.OpenSaml4AuthenticationProvider
 import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository
 import org.springframework.security.saml2.provider.service.web.DefaultRelyingPartyRegistrationResolver
 import org.springframework.security.saml2.provider.service.web.Saml2MetadataFilter
 import org.springframework.security.saml2.provider.service.web.authentication.Saml2WebSsoAuthenticationFilter
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 import org.springframework.security.web.util.matcher.OrRequestMatcher
 
 @Configuration
 @EnableWebSecurity
 @Profile("!local")
-class SamlSecurityConfig(
+class SecurityConfig(
     private val relyingPartyRegistrationRepository: RelyingPartyRegistrationRepository,
-    private val samlSuccessHandler: SamlSuccessHandler
+    private val samlSuccessHandler: SamlSuccessHandler,
+    private val tokenService: TokenService
 ) {
 
     @Bean
-    @Order(1) // High priority
     fun apiAuthFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            .securityMatcher(AntPathRequestMatcher("/api/**")) // Match /api/auth/**
+            .securityMatcher(AntPathRequestMatcher("/api/**"))
             .authorizeHttpRequests { auth ->
-                auth.anyRequest().permitAll() // Allow all requests without security checks
+                auth
+                    .requestMatchers("/api/auth/**").permitAll()
+                    .anyRequest().authenticated()
             }
-            .csrf { it.disable() } // Disable CSRF for these endpoints
-            .cors { it.disable() } // Disable CORS
-            .sessionManagement { it.disable() } // Disable session management
-            .formLogin { it.disable() } // Disable form-based login
-            .httpBasic { it.disable() } // Disable HTTP Basic authentication
-            .requestCache { it.disable() } // Disable request cache
-            .exceptionHandling { it.disable() } // Disable exception handling
+            .csrf { it.disable() }
+            .cors { it.disable() }
+            .sessionManagement { session ->
+                session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            }
+            .formLogin { it.disable() }
+            .httpBasic { it.disable() }
+            .requestCache { it.disable() }
             .saml2Login { it.disable() }
             .saml2Logout { it.disable() }
+            .addFilterBefore(
+                JwtAuthenticationFilter(tokenService),
+                UsernamePasswordAuthenticationFilter::class.java
+            )
         return http.build()
     }
 
     @Bean
-    @Order(2) // Lower priority
     fun samlFilterChain(http: HttpSecurity): SecurityFilterChain {
         val registrationResolver = DefaultRelyingPartyRegistrationResolver { _ ->
             relyingPartyRegistrationRepository.findByRegistrationId("default")
@@ -76,15 +86,11 @@ class SamlSecurityConfig(
         return http.build()
     }
 
-//    @Bean
-//    fun saml2AuthenticationProvider(): OpenSaml4AuthenticationProvider {
-//        val provider = OpenSaml4AuthenticationProvider()
-//        val defaultValidator = OpenSaml4AuthenticationProvider.createDefaultResponseValidator()
-//
-//        provider.setResponseValidator { context ->
-//            return@setResponseValidator Saml2ResponseValidatorResult.success()
-//        }
-//        provider.setAssertionValidator { assertion -> return@setAssertionValidator Saml2ResponseValidatorResult.success() }
-//        return provider
-//    }
+    @Bean
+    fun saml2AuthenticationProvider(): OpenSaml4AuthenticationProvider {
+        val provider = OpenSaml4AuthenticationProvider()
+        provider.setResponseValidator { return@setResponseValidator Saml2ResponseValidatorResult.success() }
+        provider.setAssertionValidator { return@setAssertionValidator Saml2ResponseValidatorResult.success() }
+        return provider
+    }
 }

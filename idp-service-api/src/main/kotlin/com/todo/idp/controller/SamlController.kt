@@ -28,7 +28,7 @@ class SamlController(private val samlService: SamlService) {
     ): String {
         model.addAttribute("samlRequest", samlRequest)
         model.addAttribute("relayState", relayState)
-        return "login" // This will render login.html template
+        return "login"
     }
 
     @PostMapping("/sso")
@@ -38,53 +38,38 @@ class SamlController(private val samlService: SamlService) {
         @RequestParam("username") username: String,
         @RequestParam("password") password: String
     ): String {
-        // Decode SAML request
         val decodedRequest = String(Base64.getDecoder().decode(samlRequest))
 
-        // Extract request ID from SAML request (simplified)
         val requestId = extractRequestId(decodedRequest)
 
-        // Authenticate user and generate SAML response
         val samlResponse = samlService.authenticateAndGenerateSamlResponse(username, password, requestId)
         return generateAutoSubmitForm(samlResponse, requestId)
     }
 
     private fun extractRequestId(samlRequest: String): String {
         try {
-            // Create DOM parser
             val factory = DocumentBuilderFactory.newInstance().apply {
                 isNamespaceAware = true
             }
             val builder = factory.newDocumentBuilder()
 
-            // Parse the XML
             val doc: Document = builder.parse(ByteArrayInputStream(samlRequest.toByteArray()))
-
-            // Get ID attribute from the AuthnRequest element
-            // The root element in a SAML AuthnRequest is always AuthnRequest
             val authnRequest = doc.documentElement
 
-            // Get the ID attribute
             val id = authnRequest.getAttribute("ID")
             if (!id.isNullOrEmpty()) {
                 return id
             }
-
-            // If no ID found, generate a new one
             return "_" + UUID.randomUUID().toString()
 
         } catch (e: Exception) {
-            // Log the error
             println("Error parsing SAML request: ${e.message}")
-            // Return a generated ID as fallback
             return "_" + UUID.randomUUID().toString()
         }
     }
 
     private fun generateAutoSubmitForm(samlResponse: String, requestId: String): String {
         val encodedResponse = Base64.getEncoder().encodeToString(samlResponse.toByteArray())
-//        val destination =
-//            "http://localhost:8080/api/auth/saml/exchange" // Should come from configuration or SAML request
         val destination = "http://localhost:8080/login/saml2/sso/default"
         return """
             <!DOCTYPE html>

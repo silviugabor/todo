@@ -327,4 +327,8 @@ class SamlService(
         return keyFactory.generatePrivate(keySpec)
     }
 
+    fun getSigningCertificate(): java.security.cert.X509Certificate {
+        return loadCertificate()
+    }
+
 }

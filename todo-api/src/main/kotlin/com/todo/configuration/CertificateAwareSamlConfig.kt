@@ -4,8 +4,9 @@ import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.saml2.core.Saml2X509Credential
-import org.springframework.security.saml2.provider.service.registration.*
-import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistration.AssertingPartyDetails
+import org.springframework.security.saml2.provider.service.registration.InMemoryRelyingPartyRegistrationRepository
+import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrationRepository
+import org.springframework.security.saml2.provider.service.registration.RelyingPartyRegistrations
 import java.io.ByteArrayInputStream
 import java.security.KeyFactory
 import java.security.cert.CertificateFactory
@@ -34,7 +35,7 @@ class CertificateAwareSamlConfig {
                 party
                     .entityId("http://localhost:8081/saml/metadata")
                     .singleSignOnServiceLocation("http://localhost:8081/saml/login")
-                    .wantAuthnRequestsSigned(false)
+                    .wantAuthnRequestsSigned(true)
                     .verificationX509Credentials { c ->
                         c.add(loadIdpVerificationCredential())
                     }

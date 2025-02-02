@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build idp-service-api
 
 on:
   workflow_dispatch: {}
@@ -9,7 +9,7 @@ jobs:
     environment: build_push
 
     steps:
-      - name: Checkout repository
+      - name: Checkout todo
         uses: actions/checkout@v3
 
       - name: Set up JDK 17
@@ -18,7 +18,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Build the application with Gradle
+      - name: Build idp-service-api
         run: ./gradlew build
 
       - name: Set up Docker Buildx
@@ -30,7 +30,7 @@ jobs:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
 
-      - name: Build and Push Docker Image
+      - name: Build idp-service-api
         uses: docker/build-push-action@v4
         with:
           context: ./idp-service-api

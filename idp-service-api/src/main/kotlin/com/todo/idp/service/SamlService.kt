@@ -70,14 +70,14 @@ class SamlService(
 
     fun generateMetadata(): String {
         val entityDescriptor = createSAMLObject(EntityDescriptor.DEFAULT_ELEMENT_NAME) as EntityDescriptor
-        entityDescriptor.entityID = "http://localhost:8081/saml/metadata"
+        entityDescriptor.entityID = entityId
 
         val idpDescriptor = createSAMLObject(IDPSSODescriptor.DEFAULT_ELEMENT_NAME) as IDPSSODescriptor
         (idpDescriptor as RoleDescriptor).addSupportedProtocol("urn:oasis:names:tc:SAML:2.0:protocol")
 
         val ssoService = createSAMLObject(SingleSignOnService.DEFAULT_ELEMENT_NAME) as SingleSignOnService
         ssoService.binding = "urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-        ssoService.location = "http://localhost:8081/saml/sso"
+        ssoService.location = "$entityId/saml/sso"
         idpDescriptor.singleSignOnServices.add(ssoService)
 
         val signingKeyDescriptor = createKeyDescriptor(loadCertificate(), UsageType.SIGNING)

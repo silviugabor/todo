@@ -24,3 +24,7 @@ dependencies {
     implementation("org.opensaml:opensaml-saml-api:4.0.1")
     implementation("org.opensaml:opensaml-saml-impl:4.0.1")
 }
+
+tasks.jar {
+    enabled = false
+}

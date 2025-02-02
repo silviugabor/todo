@@ -54,29 +54,9 @@ class CertificateAwareSamlConfig {
         return Saml2X509Credential(privateKey, certificate, Saml2X509Credential.Saml2X509CredentialType.SIGNING)
     }
 
-    private fun loadDecryptionCredential(): Collection<Saml2X509Credential> {
-        val privateKey = loadPrivateKey()
-        val certificate = loadCertificate()
-
-        return listOf(
-            Saml2X509Credential(
-                privateKey,
-                certificate,
-                Saml2X509Credential.Saml2X509CredentialType.DECRYPTION
-            )
-        )
-    }
-
     private fun loadIdpVerificationCredential(): Saml2X509Credential {
         val certificate = loadCertificate()
         return Saml2X509Credential(certificate, Saml2X509Credential.Saml2X509CredentialType.VERIFICATION)
-    }
-
-    private fun loadSignatureVerificationCredential(): Saml2X509Credential {
-        return Saml2X509Credential(
-            loadCertificate(),
-            Saml2X509Credential.Saml2X509CredentialType.ENCRYPTION
-        )
     }
 
     private fun loadPrivateKey(): RSAPrivateKey {

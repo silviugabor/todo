@@ -19,7 +19,6 @@ jobs:
           java-version: '17'
 
       - name: Build the application with Gradle
-        working-directory: ./idp-service-api
         run: ./gradlew build
 
       - name: Set up Docker Buildx

@@ -1,13 +1,12 @@
 name: Build and Push Docker Image
 
 on:
-  push:
-    branches:
-      - master
+  workflow_dispatch: {}
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
+    environment: build_push
 
     steps:
       - name: Checkout repository

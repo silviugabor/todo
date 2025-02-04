@@ -1,0 +1,22 @@
+name: Test Local Kubernetes via ngrok
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test-k8s:
+    runs-on: ubuntu-latest
+    environment: local
+
+    env:
+      NGROK_HOST: 0.tcp.ngrok.io
+      NGROK_PORT: 12345
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up kubeconfig from secret
+        run: echo "${{ secrets.KUBECONFIG_CONTENT }}" > $HOME/.kube/config
+
+      - name: Test connection to Kubernetes
+        run: kubectl cluster-info && kubectl get nodes

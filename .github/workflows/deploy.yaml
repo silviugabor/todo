@@ -35,11 +35,11 @@ jobs:
       - name: Deploy idp-service-api
         run: kubectl apply -f idp-service-api/idp-service-api.yaml
 
-      - name: [idp-service-api] Wait for Deployment Rollout
+      - name: Wait for Deployment Rollout
         run: kubectl rollout status deployment/idp-service-api-deployment --timeout=60s
 
       - name: Deploy todo-api
         run: kubectl apply -f todo-api/todo-api.yaml
 
-      - name: [todo-api] Wait for Deployment Rollout
+      - name: Wait for Deployment Rollout
         run: kubectl rollout status deployment/todo-api-deployment --timeout=60s

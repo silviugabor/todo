@@ -1,14 +1,14 @@
-name: Test Local Kubernetes via ngrok
+name: Deploy todo-api
 
 on:
   workflow_dispatch:
     inputs:
       NGROK_HOST:
-        description: 'Ngrok Host'
+        description: 'k8s hostname'
         required: true
         default: '0.tcp.ngrok.io'
       NGROK_PORT:
-        description: 'Ngrok Port'
+        description: 'k8s port'
         required: true
         default: '12345'
 
@@ -35,5 +35,11 @@ jobs:
       - name: Deploy idp-service-api
         run: kubectl apply -f idp-service-api/idp-service-api.yaml
 
-      - name: Wait for Deployment Rollout
+      - name: [idp-service-api] Wait for Deployment Rollout
         run: kubectl rollout status deployment/idp-service-api-deployment --timeout=60s
+
+      - name: Deploy todo-api
+        run: kubectl apply -f todo-api/todo-api.yaml
+
+      - name: [todo-api] Wait for Deployment Rollout
+        run: kubectl rollout status deployment/todo-api-deployment --timeout=60s

@@ -9,8 +9,8 @@ jobs:
     environment: local
 
     env:
-      NGROK_HOST: 0.tcp.ngrok.io
-      NGROK_PORT: 12345
+      NGROK_HOST: 5.tcp.eu.ngrok.io
+      NGROK_PORT: 10358
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

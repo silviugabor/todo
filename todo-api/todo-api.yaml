@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: todo-api
-          image: todo/todo-api:latest
+          image: silviugabor95/todo-api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080

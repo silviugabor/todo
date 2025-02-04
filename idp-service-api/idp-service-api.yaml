@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: idp-service-api
-          image: todo/idp-service-api:latest
+          image: silviugabor95/idp-service-api:latest
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081

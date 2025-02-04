@@ -2,6 +2,15 @@ name: Test Local Kubernetes via ngrok
 
 on:
   workflow_dispatch:
+    inputs:
+      NGROK_HOST:
+        description: 'Ngrok Host'
+        required: true
+        default: '0.tcp.ngrok.io'
+      NGROK_PORT:
+        description: 'Ngrok Port'
+        required: true
+        default: '12345'
 
 jobs:
   test-k8s:
@@ -9,8 +18,8 @@ jobs:
     environment: local
 
     env:
-      NGROK_HOST: 5.tcp.eu.ngrok.io
-      NGROK_PORT: 10358
+      NGROK_HOST: ${{ github.event.inputs.NGROK_HOST }}
+      NGROK_PORT: ${{ github.event.inputs.NGROK_PORT }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3

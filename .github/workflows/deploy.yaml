@@ -35,8 +35,23 @@ jobs:
       - name: Deploy idp-service-api
         run: kubectl apply -f idp-service-api/idp-service-api.yaml
 
-      - name: Wait for Deployment Rollout
-        run: kubectl rollout status deployment/idp-service-api-deployment --timeout=60s
+      - name: Verify Deployment Status
+        run: |
+          echo "Waiting for deployment to be ready..."
+          kubectl wait --for=condition=available --timeout=300s deployment/idp-service-api-deployment || exit 1
+          echo "Checking deployment status..."
+          kubectl get deployment idp-service-api-deployment
+
+      - name: Check Application Health
+        run: |
+          echo "Checking application health..."
+          POD_NAME=$(kubectl get pods -l app=idp-service-api -o jsonpath="{.items[0].metadata.name}")
+          if kubectl exec $POD_NAME -- wget -qO- http://localhost:8081/actuator/health | grep -q "UP"; then
+            echo "✅ Application is healthy"
+          else
+            echo "❌ Health check failed"
+            exit 1
+          fi
 
       - name: Deploy todo-api
         run: kubectl apply -f todo-api/todo-api.yaml

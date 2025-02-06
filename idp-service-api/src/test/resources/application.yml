@@ -1,38 +1,21 @@
 spring:
   datasource:
-    url: jdbc:h2:mem:idp_db
+    url: jdbc:h2:mem:idp_test_db
     username: sa
     password: password
     driver-class-name: org.h2.Driver
   h2:
     console:
-      enabled: true
-      path: /h2-console
+      enabled: false
   jpa:
     hibernate:
       ddl-auto: update
-    show-sql: true
+    show-sql: false
 
 server:
   port: 8081
-management:
-  endpoints:
-    web:
-      exposure:
-        include: health,metrics,info
-  endpoint:
-    health:
-      enabled: true
-      show-details: always
-    metrics:
-      enabled: true
-    info:
-      enabled: true
-  security:
-    enabled: false
 
 saml2:
   entity-id: http://idp-service-api-service:8081
-  #  entity-id: http://localhost:8081
   certificate: -----BEGIN CERTIFICATE-----MIIDdTCCAl2gAwIBAgIUZb2VXHz3FPO4oNwffYN44Tf6A/0wDQYJKoZIhvcNAQELBQAwSjELMAkGA1UEBhMCUk8xCzAJBgNVBAgMAklTMQswCQYDVQQHDAJJUzEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMB4XDTI1MDEyMTEyMTEwMFoXDTI2MDEyMTEyMTEwMFowSjELMAkGA1UEBhMCUk8xCzAJBgNVBAgMAklTMQswCQYDVQQHDAJJUzEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt2DJPVu3rnFTfJe1Eqzgh9ka8EePsQQBztZ7r0hzBrZrXrbaCjvwTKpFglyMUBzidsoBjM8mZGlVzt2TMr84ww1Bc9pbi5F+QsfvVEEKHMd0zAX2Em9ycnUEambyHGTLFzXLJHOOURDgpgG8t39zFsZecHUqBP6g1JBU+5TnLK0wWnkt+sWe5JdUcHDWdrILZmSz1fDdarfMuUeS3ZWXpM76LsyPgOUu1hBAEQrVtMsydUt2e4sfzz+JKMjzCfZtxnhwgRGZmnUyZAj5KTFEbLgRYiOLROHuwBS9SjX1AbmjZhwRwEpRb16kArzSpHeTJauhuf98mzKmd32WG99E6wIDAQABo1MwUTAdBgNVHQ4EFgQU7mn2uq54/9KqzYA+auNEpCIDRKwwHwYDVR0jBBgwFoAU7mn2uq54/9KqzYA+auNEpCIDRKwwDwYDVR0TAQH/BAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAKo5FolyfQpCuKqDXhJ/SpLxLFUWl95AAE957Z5pCZDbHQzJ8757s0E9Q50XWREVu1d3j0nQfVYm4SOsvxYhkMmSdvcQUtIk6ApMVTRCI+PYntfIapnBlPg8zpJ5DD6j08RK11jyj5Bu6l2KK/caXDIWAHsusDiuGm0KcUHN82rzMNY9QFkcJwhCyUBdHqU+z9YCsfmU3Fe18/ozsTYJ5wy2koI+T4/d+QTgGJRdeLyo3bR3Ae+RmuNNe8KyqudLdVZK7RRuBvzWZGQL3kEkDhVp1KXlOdhdyeBA/7VD8ANRWOG6PIlDArLrMKqSBLLBSIAFiEvKw4l9Rm1iYypj8yQ==-----END CERTIFICATE-----
   private-key: -----BEGIN PRIVATE KEY-----MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQC3YMk9W7eucVN8l7USrOCH2RrwR4+xBAHO1nuvSHMGtmtettoKO/BMqkWCXIxQHOJ2ygGMzyZkaVXO3ZMyvzjDDUFz2luLkX5Cx+9UQQocx3TMBfYSb3JydQRqZvIcZMsXNcskc45REOCmAby3f3MWxl5wdSoE/qDUkFT7lOcsrTBaeS36xZ7kl1RwcNZ2sgtmZLPV8N1qt8y5R5LdlZekzvouzI+A5S7WEEARCtW0yzJ1S3Z7ix/PP4koyPMJ9m3GeHCBEZmadTJkCPkpMURsuBFiI4tE4e7AFL1KNfUBuaNmHBHASlFvXqQCvNKkd5Mlq6G5/3ybMqZ3fZYb30TrAgMBAAECggEAAPacCAZRmRdjM9Uv92GmHBXqt+wVpjZaHvfgCCCHP/DVRaxFAp/5pj5XaQagb6Bp4pZsE8YCljtzNDm33hKLpRFVl6ILTLxXUUrTQPo4fW82lD+Ti9mUXH/l3opVyycrSUmmVWBo6nuMfh80Gmw6CAyKnQT0/dSA0ztCpiN28d8SwjLs5RlJtrITe1Yf8EhgnlizrDPKLw2tR+/K+R6crhTMRFLro7cIE//JTNYmWA3qgoJMoodiAeXILvM7JZ7pqYVZmasB3m5v2mo25vN5/sARjchMrGilK2aRlzHhjnMAGsRxbGKCvYkrx3tlHE2X5aSr/Aj20qMpZXO+7dTqkQKBgQDmDHCfcJ6zqACAGR4Jo9bfw4w2uyLDN2w7uxirTJIjIB557Ma3T094ghagoCyGB7PvVcZeuc1geyndv2H9rWxUIGLw9MbMw+cEn2t/6rVzL3q4n0j53weZ8y1U34z/3tz26imgsJ0LU5aTSZh7pqADDiGP7k29kyEGfyU1ux3/EQKBgQDMEI0Cr7DpLvKngHjOwFyrSKIxVIsj8Tg7eo4RZXNOqIWcImexzF8MG1DFhTBicchP0d/eVtu2Mmh6U+bdmCWrxXiC9qCoKKjRod06Pyb2874XZSWpXkM+FkJWn1oIg1IUOMhJiAWAkb89Dy+Mdw9jtsfbe+vE3Qj3TE5YBFW8OwKBgQCdnnJf28Lw5zAIlK0O/9HOmOXt7gQga03eExAQ9jK+nFglQ8TXfiC+OauVPImk/4wadNOovXdpHpoN0/4o2HT7owEHhT7ct3EGqs/14fOWyzYzXveaNGS553LszwqFmcYd60zAS6IeS5REsE0ok37Y+Qqn2igrtq4PDHiLOvyPcQKBgGWeqFn6G+NDWdtIAuESshMp7HscWt3fNd2Ivk6zcqRtD3wdNf44g+yHfcWe+eVMPDBjl1QldOxaVeT0+zbGmZvcjpLJNmAHP2qFbKGg6Up5PuRvnj2lj17PvuFcIX2zx6ACVtsnPXY1HkLN2SPd9m/1ibknENXMLLbZ7PmvzvIZAoGAd00IGDfTdTCMNMTUtfRavvbdFnoeKh8425ehEgUZgVbzerIMrynZ75ouAK2x98U+cIFA4OPDJca9pXI4lCfETzxyMVnx0scEUoSYCsSuWJkEoXLP0c1SYnUWxY8Ky2ujls9ji1Z58woADXbJcD6t+8XfEm+P7UUt5v29AxYEASs=-----END PRIVATE KEY-----

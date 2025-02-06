@@ -1,5 +1,6 @@
 package com.todo.idp.config
 
+import org.springframework.boot.actuate.autoconfigure.security.servlet.ManagementWebSecurityAutoConfiguration
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration
 import org.springframework.context.annotation.Bean
@@ -9,7 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 
 
 @Configuration
-@EnableAutoConfiguration(exclude = [SecurityAutoConfiguration::class])
+@EnableAutoConfiguration(exclude = [SecurityAutoConfiguration::class, ManagementWebSecurityAutoConfiguration::class])
 class SecurityConfig {
 
     @Bean

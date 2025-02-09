@@ -21,6 +21,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-hateoas")
     implementation("org.springframework.boot:spring-boot-starter-security")
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+
     implementation("io.jsonwebtoken:jjwt:0.12.6")
     implementation("org.opensaml:opensaml-core:4.3.0")
     implementation("org.opensaml:opensaml-saml-api:4.3.0")
